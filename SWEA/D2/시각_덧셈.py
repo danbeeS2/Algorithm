@@ -1,3 +1,4 @@
+# 1976. 시각 덧셈
 for t in range(int(input())):
     hour1, min1, hour2, min2 = map(int, input().split())
     result_min = min1 + min2
