@@ -5,7 +5,7 @@ def dfs(n, s, lst):
         print(*lst)
         return
     for i in range(s, N):
-        dfs(n+1, i+1, lst+[arr[i]])
+        dfs(n + 1, i + 1, lst + [arr[i]])
 
 
 N, M = map(int, input().split())
