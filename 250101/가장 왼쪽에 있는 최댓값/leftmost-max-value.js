@@ -30,7 +30,7 @@ for (let i=0; i<res[0]-1; i++){
     }
 }
 
-// // 두번째 최댓값의 순서 저장
-res.push(idx+1)
+// 두번째 최댓값의 순서 저장
+res[0] !== idx+1 ? res.push(idx+1) : ''
 
 console.log(res.join(' '))
