@@ -1,15 +1,22 @@
 // Lv.1 햄버거 만들기
-// 시간 초과
 function solution(ingredient) {
+    let stack = [];
     let res = 0;
-    let totalIngredient = ingredient.join('')
-    
-    // [반례] 입력: [1, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 1, 1],  기댓값: 2
-    
-    while(totalIngredient.includes('1231')){
-        totalIngredient = totalIngredient.replace('1231', '');  // 첫 번째 햄버거 제거
-        res++;  // 햄버거 개수 증가
+
+    for (let i = 0; i < ingredient.length; i++) {
+        stack.push(ingredient[i]);
+
+        // 스택의 끝이 1,2,3,1이면 햄버거 조립 후 제거
+        if (stack.length >= 4 && 
+            stack[stack.length - 4] === 1 &&
+            stack[stack.length - 3] === 2 &&
+            stack[stack.length - 2] === 3 &&
+            stack[stack.length - 1] === 1) {
+            
+            // stack.splice(stack.length - 4, 4);
+            stack.length -= 4;  // 햄버거 재료 제거
+            res++;  // 햄버거 개수 증가
+        }
     }
-    
     return res;
 }
