@@ -15,22 +15,13 @@ class Student {
   }
 }
 
-const arrayToObject = (arr) => {
-  let res = [];
-  for (let i = 0; i < arr.length; i++) {
-    const [h, w] = arr[i];
-    res.push(new Student(h, w, i + 1));
-  }
-  return res;
-};
+const arrayToObject = (arr) => arr.map(([h, w], i) => new Student(h, w, i + 1));
 
 const sortByTall = (arr) => {
   return [...arr].sort((a, b) => {
-    if (a.height === b.height) {
-      if (a.weight !== b.weight) return b.weight - a.weight; // 2. 몸무게가 더 큰 학생이 앞에
-      return a.number - b.number; // 3. 번호가 작은 학생이 앞에
-    }
-    return b.height - a.height; // 1. 키가 더 큰 학생이 앞에
+    if (a.height !== b.height) return b.height - a.height; // 1. 키가 더 큰 학생이 앞에
+    if (a.weight !== b.weight) return b.weight - a.weight; // 2. 몸무게가 더 큰 학생이 앞에
+    return a.number - b.number; // 3. 번호가 작은 학생이 앞에
   });
 };
 
@@ -38,7 +29,7 @@ const main = () => {
   const students = arrayToObject(info);
   const sorted = sortByTall(students);
 
-  sorted.map((student) => student.print());
+  sorted.forEach((student) => student.print());
 };
 
 main();
