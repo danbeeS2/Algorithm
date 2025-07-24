@@ -3,18 +3,15 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split("\n");
 
 const n = Number(input[0]);
-const numbers = input.slice(1);
+const numbers = input.slice(1).map(Number);
 
 const countSameSign = (numbers) => {
-  let minusCnt = 1;
-  let plusCnt = 1;
+  let cnt = 1;
   let maxCnt = 1;
   for (let i = 1; i < numbers.length; i++) {
-    minusCnt = numbers[i] < 0 && numbers[i - 1] < 0 ? minusCnt + 1 : 1;
-    plusCnt = numbers[i] >= 0 && numbers[i - 1] >= 0 ? plusCnt + 1 : 1;
-
-    if (maxCnt < minusCnt) maxCnt = minusCnt;
-    if (maxCnt < plusCnt) maxCnt = plusCnt;
+    // 같은 부호: 곱이 양수 (0 제외), 부호 일치
+    cnt = numbers[i] * numbers[i - 1] > 0 ? cnt + 1 : 1;
+    maxCnt = Math.max(maxCnt, cnt);
   }
   return maxCnt;
 };
