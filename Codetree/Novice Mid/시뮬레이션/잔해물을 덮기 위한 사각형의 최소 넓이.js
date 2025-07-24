@@ -16,8 +16,7 @@ const MAX_SIZE = OFFSET * 2;
 const createBoard = (size) =>
   Array.from({ length: size }, () => Array(size).fill(0));
 
-const markRectangleArea = (rect, board, num) => {
-  const [x1, y1, x2, y2] = rect;
+const markRectangleArea = (board, [x1, y1, x2, y2], num) => {
   for (let y = y1 + OFFSET; y < y2 + OFFSET; y++) {
     for (let x = x1 + OFFSET; x < x2 + OFFSET; x++) {
       board[y][x] = num;
@@ -27,42 +26,35 @@ const markRectangleArea = (rect, board, num) => {
 };
 
 const getMinXY = (board) => {
-  let x1 = MAX_SIZE,
-    y1 = MAX_SIZE;
-  let x2 = -MAX_SIZE,
-    y2 = -MAX_SIZE;
+  let minX = MAX_SIZE;
+  let minY = MAX_SIZE;
+  let maxX = -MAX_SIZE;
+  let maxY = -MAX_SIZE;
 
-  for (let i = 0; i < MAX_SIZE; i++) {
-    for (let j = 0; j < MAX_SIZE; j++) {
-      if (board[i][j] === 0) continue;
-
-      if (x1 > i) x1 = i;
-      if (x2 < i) x2 = i;
-      if (y1 > j) y1 = j;
-      if (y2 < j) y2 = j;
+  for (let y = 0; y < MAX_SIZE; y++) {
+    for (let x = 0; x < MAX_SIZE; x++) {
+      if (board[x][y] === 0) continue;
+      if (minX > x) minX = x;
+      if (maxX < x) maxX = x;
+      if (minY > y) minY = y;
+      if (maxY < y) maxY = y;
     }
   }
-  return x2 < x1 || y2 < y1 ? null : [x1, y1, x2, y2];
+  return maxX < minX || maxY < minY ? null : [minX, minY, maxX, maxY];
 };
 
-const calculateArea = (x1, y1, x2, y2) => {
+const calculateArea = ([x1, y1, x2, y2]) => {
   return (x2 - x1 + 1) * (y2 - y1 + 1);
 };
 
 const main = () => {
   const board = createBoard(MAX_SIZE);
 
-  markRectangleArea(rect1, board, 1);
-  markRectangleArea(rect2, board, 0);
+  markRectangleArea(board, rect1, 1);
+  markRectangleArea(board, rect2, 0);
 
   const bounds = getMinXY(board);
-  if (!bounds) {
-    console.log(0);
-    return;
-  }
-  const [x1, y1, x2, y2] = bounds;
-
-  const res = calculateArea(x1, y1, x2, y2);
+  const res = bounds ? calculateArea(bounds) : 0;
 
   console.log(res);
 };
