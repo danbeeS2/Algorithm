@@ -14,27 +14,28 @@ const sortBySecond = (records) => {
   return [...records].sort((a, b) => a[0] - b[0]);
 };
 
-const virus = (arr, n, first, k) => {
-  const people = Array.from({ length: 2 }, () => Array(n + 1).fill(0));
-  people[0][first] = 1;
+const virus = (events, n, first, k) => {
+  const infected = Array(n + 1).fill(false);
+  const counts = Array(n + 1).fill(0);
 
-  for (const [t, x, y] of arr) {
-    if (people[0][x] === 1 && people[0][y] === 1) {
-      people[1][x] += 1;
-      people[1][y] += 1;
-    } else if (people[0][y] === 0 && people[0][x] === 1) {
-      if (people[1][x] < k) {
-        people[1][x] += 1;
-        people[0][y] = 1; // 감염
-      }
-    } else if (people[0][x] === 0 && people[0][y] === 1) {
-      if (people[1][y] < k) {
-        people[1][y] += 1;
-        people[0][x] = 1; // 감염
-      }
+  infected[first] = true;
+
+  for (const [time, x, y] of events) {
+    if (infected[x] && infected[y]) {
+      counts[x] += 1;
+      counts[y] += 1;
+    } else if (!infected[y] && infected[x] && counts[x] < k) {
+      counts[x] += 1;
+      infected[y] = true; // 감염
+    } else if (!infected[x] && infected[y] && counts[y] < k) {
+      counts[y] += 1;
+      infected[x] = true; // 감염
     }
   }
-  return people[0].slice(1).join("");
+  return infected
+    .slice(1)
+    .map((v) => (v ? 1 : 0))
+    .join("");
 };
 
 const main = () => {
