@@ -8,81 +8,49 @@ const grid = fs
   .map((row) => row.split(" ").map(Number));
 const n = 19;
 
-const isRowFive = (grid, n) => {
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n - 4; j++) {
-      const curr = grid[i][j];
-      if (
-        curr !== 0 &&
-        curr === grid[i][j + 1] &&
-        curr === grid[i][j + 2] &&
-        curr === grid[i][j + 3] &&
-        curr === grid[i][j + 4]
-      )
-        return { winner: curr, x: i, y: j + 2 };
-    }
-  }
-  return false;
-};
-
-const isColFive = (grid, n) => {
-  for (let i = 0; i < n - 4; i++) {
-    for (let j = 0; j < n; j++) {
-      const curr = grid[i][j];
-      if (
-        curr !== 0 &&
-        curr === grid[i + 1][j] &&
-        curr === grid[i + 2][j] &&
-        curr === grid[i + 3][j] &&
-        curr === grid[i + 4][j]
-      )
-        return { winner: curr, x: i + 2, y: j };
-    }
-  }
-  return false;
-};
-
-const isRightDownFive = (grid, n) => {
-  for (let i = 0; i < n - 4; i++) {
-    for (let j = 0; j < n - 4; j++) {
-      const curr = grid[i][j];
-      if (
-        curr !== 0 &&
-        curr === grid[i + 1][j + 1] &&
-        curr === grid[i + 2][j + 2] &&
-        curr === grid[i + 3][j + 3] &&
-        curr === grid[i + 4][j + 4]
-      )
-        return { winner: curr, x: i + 2, y: j + 2 };
-    }
-  }
-  return false;
-};
-
-const isLeftUpFive = (grid, n) => {
-  for (let i = 0; i < n - 4; i++) {
-    for (let j = 0; j < n; j++) {
-      const curr = grid[i][j];
-      if (
-        curr !== 0 &&
-        curr === grid[i + 1][j - 1] &&
-        curr === grid[i + 2][j - 2] &&
-        curr === grid[i + 3][j - 3] &&
-        curr === grid[i + 4][j - 4]
-      )
-        return { winner: curr, x: i + 2, y: j - 2 };
-    }
-  }
-  return false;
-};
+const isInRange = (x, y) => 0 <= x && x < n && 0 <= y && y < n;
 
 const getWinner = (grid, n) => {
-  return (
-    isRowFive(grid, n) ||
-    isColFive(grid, n) ||
-    isRightDownFive(grid, n) ||
-    isLeftUpFive(grid, n)
-  );
+  // →, ↓, ↘, ↙
+  const dx = [0, 1, 1, 1];
+  const dy = [1, 0, 1, -1];
+
+  for (let x = 0; x < n; x++) {
+    for (let y = 0; y < n; y++) {
+      const color = grid[x][y];
+      if (color === 0) continue;
+
+      for (let dir = 0; dir < 4; dir++) {
+        const nx = x - dx[dir];
+        const ny = y - dy[dir];
+
+        // 중복 탐색 방지
+        if (isInRange(nx, ny) && grid[nx][ny] === grid[x][y]) continue;
+
+        let count = 1;
+        let cx = x;
+        let cy = y;
+
+        while (true) {
+          const nx = cx + dx[dir];
+          const ny = cy + dy[dir];
+          if (!isInRange(nx, ny)) break;
+          if (grid[nx][ny] !== color) break;
+
+          count++;
+          cx = nx;
+          cy = ny;
+        }
+
+        if (count === 5) {
+          const midX = x + dx[dir] * 2;
+          const midY = y + dy[dir] * 2;
+          return { winner: color, x: midX, y: midY };
+        }
+      }
+    }
+  }
+  return false;
 };
 
 const main = () => {
