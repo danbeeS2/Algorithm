@@ -5,26 +5,28 @@ const input = fs.readFileSync(0).toString().trim().split("\n");
 const n = Number(input[0]);
 const arr = input[1].split(" ").map(Number);
 
+const getPrefixSum = (arr, n) => {
+  const prefixSum = Array(n + 1).fill(0);
+  for (let i = 0; i < n; i++) {
+    prefixSum[i + 1] = prefixSum[i] + arr[i];
+  }
+  return prefixSum;
+};
+
 const countMatching = (arr, n) => {
+  const prefixSum = getPrefixSum(arr, n);
   let count = 0;
-  for (let start = 0; start < n; start++) {
-    for (let end = start; end < n; end++) {
-      let sum = 0;
-      for (let i = start; i <= end; i++) {
-        sum += arr[i];
-      }
 
-      let avg = sum / (end - start + 1);
+  for (let i = 0; i < n; i++) {
+    let numbers = new Set();
+    for (let j = i; j < n; j++) {
+      numbers.add(arr[j]);
 
-      let flag = false;
-      for (let i = start; i <= end; i++) {
-        if (arr[i] === avg) {
-          flag = true;
-          break;
-        }
-      }
+      // [i, j] 구간의 합
+      const sum = prefixSum[j + 1] - prefixSum[i];
 
-      if (flag) count++;
+      let avg = sum / (j - i + 1);
+      if (numbers.has(avg)) count++;
     }
   }
   return count;
