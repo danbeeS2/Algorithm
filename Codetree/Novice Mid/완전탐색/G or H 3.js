@@ -20,14 +20,19 @@ const assignScores = (arr, data) => {
 };
 
 const getMaxScore = (n, k, scores) => {
+  let currentScore = 0;
   let maxScore = Number.MIN_SAFE_INTEGER;
 
-  for (let i = 0; i < MAX_NUM - k; i++) {
-    let score = 0;
-    for (let j = i; j < i + k + 1; j++) {
-      score += scores[j];
-    }
-    maxScore = Math.max(score, maxScore);
+  // 초기 구간 합 계산
+  for (let i = 0; i < k; i++) {
+    currentScore += scores[i];
+  }
+
+  // 슬라이딩 윈도우 적용
+  for (let i = 1; i < MAX_NUM - k - 1; i++) {
+    // 앞에서 하나 빼고 뒤에 하나 더함
+    currentScore = currentScore - scores[i - 1] + scores[i + k];
+    maxScore = Math.max(maxScore, currentScore);
   }
   return maxScore;
 };
