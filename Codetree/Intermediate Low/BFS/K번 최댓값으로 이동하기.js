@@ -43,25 +43,30 @@ const bfs = (startX, startY) => {
 let cx = r - 1;
 let cy = c - 1;
 
-for (let i = 0; i < k; i++) {
+for (let _ = 0; _ < k; _++) {
   const adj = bfs(cx, cy);
 
   // 갈 수 있는 칸이 없으면 종료
   if (adj.length === 0) break;
 
-  adj.sort((a, b) => {
-    const [valueA, ax, ay] = a;
-    const [valueB, bx, by] = b;
-
-    // 이동 우선순위: 값, -행, -열
-    if (valueA !== valueB) return valueB - valueA;
-    if (ax !== bx) return ax - bx;
-    return ay - by;
-  });
-
-  if (adj.length > 0) {
-    [value, cx, cy] = adj[0];
+  // 갈 수 있는 칸 중 최대값 (이동 우선순위: 값, -행, -열)
+  let maxV = 0;
+  for (const [value, x, y] of adj) {
+    maxV = Math.max(value, maxV);
   }
+
+  let nx = n;
+  let ny = n;
+  for (const [value, x, y] of adj) {
+    if (value === maxV) {
+      if (nx > x || (nx === x && ny > y)) {
+        nx = x;
+        ny = y;
+      }
+    }
+  }
+  cx = nx;
+  cy = ny;
 }
 
 console.log(cx + 1, cy + 1);
