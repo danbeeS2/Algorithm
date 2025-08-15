@@ -2,21 +2,14 @@ function solution(numbers, target) {
   const n = numbers.length;
   let answer = 0;
 
-  let tmp = 0;
-
-  const dfs = (idx) => {
+  const dfs = (idx, sum) => {
     if (idx === n) {
-      if (tmp === target) answer++;
+      if (sum === target) answer++;
       return;
     }
 
-    tmp += numbers[idx];
-    dfs(idx + 1);
-    tmp -= numbers[idx];
-
-    tmp -= numbers[idx];
-    dfs(idx + 1);
-    tmp += numbers[idx];
+    dfs(idx + 1, sum + numbers[idx]);
+    dfs(idx + 1, sum - numbers[idx]);
   };
 
   dfs(0, 0);
