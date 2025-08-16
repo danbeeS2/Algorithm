@@ -9,6 +9,7 @@ function solution(begin, target, words) {
     let cnt = 0;
     for (let i = 0; i < len; i++) {
       if (a[i] !== b[i]) cnt++;
+      if (cnt > 1) return false;
     }
 
     return cnt === 1;
