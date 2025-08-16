@@ -12,11 +12,14 @@ function solution(maps) {
   ];
 
   const bfs = (x, y) => {
+    let head = 0;
     const queue = [[x, y]];
     visited[x][y] = 1;
 
-    while (queue.length > 0) {
-      const [cx, cy] = queue.shift();
+    while (queue.length > head) {
+      const [cx, cy] = queue[head++];
+
+      if (cx === n - 1 && cy === m - 1) return visited[cx][cy];
 
       for (const [dx, dy] of directions) {
         const nx = cx + dx;
@@ -30,9 +33,10 @@ function solution(maps) {
         }
       }
     }
+    return -1;
   };
-  bfs(0, 0);
-  const answer = visited[n - 1][m - 1] === 0 ? -1 : visited[n - 1][m - 1];
+
+  const answer = bfs(0, 0);
 
   return answer;
 }
