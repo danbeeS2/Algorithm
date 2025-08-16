@@ -3,7 +3,7 @@ function solution(begin, target, words) {
   if (!words.includes(target)) return 0;
 
   const len = begin.length;
-  const visited = Array(words.length).fill(0);
+  const visited = Array(words.length).fill(false);
 
   const isDiffOne = (a, b) => {
     let cnt = 0;
