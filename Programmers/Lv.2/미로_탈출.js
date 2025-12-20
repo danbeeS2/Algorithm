@@ -1,6 +1,6 @@
 function solution(maps) {
-  const n = maps.length;
-  const m = maps[0].length;
+  const row = maps.length;
+  const col = maps[0].length;
 
   const directions = [
     [0, -1],
@@ -10,46 +10,43 @@ function solution(maps) {
   ];
 
   const bfs = (sx, sy, target) => {
-    const visited = Array.from({ length: n }, () => Array(m).fill(false));
-    const queue = [[sx, sy, 0]];
-    visited[sx][sy] = true;
+    const visited = Array.from({ length: row }, () => Array(col).fill(-1));
+
+    const queue = [[sx, sy]];
+    visited[sx][sy] = 0;
 
     while (queue.length > 0) {
-      const [x, y, dist] = queue.shift();
+      const [x, y] = queue.shift();
 
-      if (maps[x][y] === target) return dist;
+      if (maps[x][y] === target) return visited[x][y];
 
       for (const [dx, dy] of directions) {
         const nx = x + dx;
         const ny = y + dy;
 
-        if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+        if (nx < 0 || nx >= row || ny < 0 || ny >= col) continue;
         if (maps[nx][ny] === "X") continue;
-        if (visited[nx][ny] === true) continue;
+        if (visited[nx][ny] !== -1) continue;
 
-        visited[nx][ny] = true;
-        queue.push([nx, ny, dist + 1]);
+        visited[nx][ny] = visited[x][y] + 1;
+        queue.push([nx, ny]);
       }
     }
+
     return -1;
   };
 
   let sx, sy, lx, ly;
 
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < m; j++) {
+  for (let i = 0; i < row; i++) {
+    for (let j = 0; j < col; j++) {
       if (maps[i][j] === "S") [sx, sy] = [i, j];
       if (maps[i][j] === "L") [lx, ly] = [i, j];
     }
   }
 
-  let d1 = bfs(sx, sy, "L");
-  if (d1 === -1) return -1;
+  const dist1 = bfs(sx, sy, "L");
+  const dist2 = bfs(lx, ly, "E");
 
-  let d2 = bfs(lx, ly, "E");
-  if (d2 === -1) return -1;
-
-  console.log(d1, d2);
-
-  return d1 + d2;
+  return dist1 === -1 || dist2 === -1 ? -1 : dist1 + dist2;
 }
